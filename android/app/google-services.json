@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "328445232843",
+    "project_id": "maanueat",
+    "storage_bucket": "maanueat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328445232843:android:6fea65aeca0391ba47fd4e",
+        "android_client_info": {
+          "package_name": "com.example.maanueats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSNacqRmB0Ir598URHhhBkDvTEtbBGJvg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
