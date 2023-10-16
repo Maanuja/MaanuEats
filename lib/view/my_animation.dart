@@ -19,12 +19,12 @@ class _MyAnimationState extends State<MyAnimation> with SingleTickerProviderStat
   void initState() {
     super.initState();
     _controller = AnimationController(
-        duration : const Duration(seconds: 2),
-        vsync: this
+        vsync: this,
+        duration: const Duration(seconds: 2)
     );
     CurvedAnimation curvedAnimation = CurvedAnimation(parent: _controller, curve: Curves.linear);
     animationOffset = Tween<Offset>(
-      begin: const Offset(0, 0),
+      begin: const Offset(0,5),
       end: Offset.zero,
     ).animate(curvedAnimation);
     Timer(Duration(seconds: widget.duration), () {
@@ -42,11 +42,11 @@ class _MyAnimationState extends State<MyAnimation> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return FadeTransition(
-        opacity: _controller,
+      opacity: _controller,
       child: SlideTransition(
         position: animationOffset,
         child: widget.child,
-      )
+      ),
     );
   }
 }
