@@ -36,6 +36,7 @@ class _MyPeopleListState extends State<MyPeopleList> {
                       return Container();
                     }
                     else {
+                      bool isFavorite = moi.isInFavorites(otherUser.uid);
                       return Card(
                         elevation: 5,
                         color: Colors.amber,
@@ -49,7 +50,24 @@ class _MyPeopleListState extends State<MyPeopleList> {
                           ),
                           title: Text(otherUser.fullName),
                           subtitle: Text(otherUser.email),
-                          trailing: Icon(Icons.favorite_outline_outlined),
+                          trailing: IconButton(
+                            icon: isFavorite
+                                ? Icon(Icons.favorite, color: Colors.red)
+                                : Icon(Icons.favorite_outline_outlined),
+                            onPressed: () {
+                              setState(() {
+                                if (isFavorite) {
+                                  moi.removeFromFavorites(otherUser.uid);
+                                  FirestoreHelper().removeFromFavoritesList(
+                                      moi.uid, otherUser.uid);
+                                } else {
+                                  moi.addToFavorites(otherUser.uid);
+                                  FirestoreHelper().addToFavoritesList(
+                                      moi.uid, otherUser.uid);
+                                }
+                              });
+                            },
+                          ),
                         ),
                       );
                     }

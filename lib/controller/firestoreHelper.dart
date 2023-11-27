@@ -56,6 +56,23 @@ class FirestoreHelper {
     return url;
   }
 
+  //ajouter une personne dans sa liste de favoris
+  Future<void> addToFavoritesList(String userUid, String userFavoriteUid) async {
+    await cloudUser.doc(userUid).update({
+      'favoris': FieldValue.arrayUnion([userFavoriteUid]),
+    });
+    print("ajouter dans la db");
+  }
+
+  //supprimer une personne dans sa liste de favoris
+  Future<void> removeFromFavoritesList(String userUid, String userFavoriteUid) async {
+    await cloudUser.doc(userUid).update({
+      'favoris': FieldValue.arrayRemove([userFavoriteUid]),
+    });
+    print("supprimer dans la db");
+
+  }
+
   // Récupère l'uid de l'utilisateur actuellement connecté
   Future<String> getCurrentUid() async {
     User? user = auth.currentUser;
@@ -91,4 +108,5 @@ class FirestoreHelper {
       'dateTime': message.dateTime,
     });
   }
+
 }
