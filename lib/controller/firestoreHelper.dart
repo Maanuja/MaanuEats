@@ -109,4 +109,7 @@ class FirestoreHelper {
     });
   }
 
+  signOut() async {
+    await auth.signOut();
+  }
 }

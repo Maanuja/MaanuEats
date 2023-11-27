@@ -54,8 +54,4 @@ class MyUser {
     return favoris != null && favoris!.contains(userFavoriteUid);
   }
 
-
-
-
-
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/restaurant.dart';
+import 'package:maanueats/view/connection.dart';
 import 'package:maanueats/view/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:maanueats/view/my_animation.dart';
@@ -48,27 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController lastName = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-
-  popErreur(){
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text('Erreur'),
-            content: Text('Email ou mot de passe incorrect'),
-            actions: [
-              TextButton(
-                  onPressed: (){
-                    Navigator.pop(context);
-                  },
-                  child: Text('ok')
-              )
-            ],
-          );
-        }
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,27 +162,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                         child: Text('register')
                     ),
-                    ElevatedButton(
-                        onPressed:(){
-                          print('click connect');
-                          FirestoreHelper().ConnectMyUser(email.text, password.text)
-                              .then((value) => {
-                            setState(() {
-                              moi = value;
-                            }),
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (context){
-                                  return DashBoard(firstName: firstName, lastName : lastName.text );
-                                }
-                            ))
-                          })
-                              .catchError((error) {
-                            popErreur();
-                          });
-
-                        },
-                        child: Text('connect')
-                    )
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigate to the connection page when the text is tapped
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                          builder: (context) {
+                            // Replace the current page with the connection page
+                            return const MyConnection();
+                          },
+                        ),
+                        );
+                      },
+                      child: const Text(
+                        'Already have an account? Log in',
+                        style: TextStyle(
+                          color: Colors.blue, // Customize the color as needed
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ],
               )
           ),
