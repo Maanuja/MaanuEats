@@ -9,6 +9,7 @@ class MyUser {
   late String email;
   String ? avatar;
   List ? favoris;
+  //List<String>? favoris;
 
 
   String get fullName {
@@ -20,6 +21,7 @@ class MyUser {
     lastname = "";
     firstname = "";
     email = "";
+    favoris = [];
   }
 
   MyUser.database(DocumentSnapshot snapshot) {
@@ -29,6 +31,31 @@ class MyUser {
     firstname = map['firstname'];
     email = map['email'] ;
     avatar = map['avatar'] ?? imageDefault;
-    favoris = map['favoris'] ?? [];
+    favoris = List<String>.from(map['favoris'] ?? []);
   }
+
+  void addToFavorites(String userFavoriteUid) {
+    if (favoris == null) {
+      favoris = [];
+    }
+    if ( !favoris!.contains(userFavoriteUid)) {
+      favoris!.add(userFavoriteUid);
+    }
+
+  }
+
+  void removeFromFavorites(String userFavoriteUid) {
+    if (favoris != null && favoris!.contains(userFavoriteUid)) {
+      favoris!.remove(userFavoriteUid);
+    }
+  }
+
+  bool isInFavorites(String userFavoriteUid) {
+    return favoris != null && favoris!.contains(userFavoriteUid);
+  }
+
+
+
+
+
 }

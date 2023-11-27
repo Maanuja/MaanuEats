@@ -54,4 +54,23 @@ class FirestoreHelper {
     String url = await snapshot.ref.getDownloadURL();
     return url;
   }
+
+  //ajouter une personne dans sa liste de favoris
+  Future<void> addToFavoritesList(String userUid, String userFavoriteUid) async {
+    await cloudUser.doc(userUid).update({
+      'favoris': FieldValue.arrayUnion([userFavoriteUid]),
+    });
+    print("ajouter dans la db");
+  }
+
+  //supprimer une personne dans sa liste de favoris
+  Future<void> removeFromFavoritesList(String userUid, String userFavoriteUid) async {
+    await cloudUser.doc(userUid).update({
+      'favoris': FieldValue.arrayRemove([userFavoriteUid]),
+    });
+    print("supprimer dans la db");
+
+  }
+
+
 }
