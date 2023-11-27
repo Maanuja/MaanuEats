@@ -3,16 +3,18 @@ import 'package:maanueats/constant.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/model/my_user.dart';
 import 'package:flutter/material.dart';
-import 'package:maanueats/view/conversation/my_chat.dart';
 
-class MyPeopleList extends StatefulWidget {
-  const MyPeopleList({super.key});
+class MyChat extends StatefulWidget {
+  String userId1;
+  String userId2;
+
+  MyChat({super.key, required this.userId1, required this.userId2});
 
   @override
-  State<MyPeopleList> createState() => _MyPeopleListState();
+  State<MyChat> createState() => _MyChatState();
 }
 
-class _MyPeopleListState extends State<MyPeopleList> {
+class _MyChatState extends State<MyChat> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -50,27 +52,8 @@ class _MyPeopleListState extends State<MyPeopleList> {
                           ),
                           title: Text(otherUser.fullName),
                           subtitle: Text(otherUser.email),
-                          // trailing: Icon(Icons.favorite_outline_outlined),
-                          trailing: Wrap(
-                            spacing: 12, // space between two icons
-                            children: <Widget>[
-                              IconButton(
-                                icon: const Icon(Icons.favorite_outline_outlined), onPressed: () {  },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.message),
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (context){
-                                        return MyChat(userId1: moi.uid, userId2 : otherUser.uid);
-                                      }
-                                  ));
-                                },
-                              ),
-                            ],
-                          ),
+                          trailing: Icon(Icons.favorite_outline_outlined),
                         ),
-
                       );
                     }
                   }
