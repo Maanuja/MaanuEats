@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:maanueats/constant.dart';
@@ -152,7 +153,21 @@ class _DashBoardState extends State<DashBoard> {
                   leading: Icon(Icons.mail),
                   title: Text(moi.email),
                 ),
-
+                ListTile(
+                  leading: IconButton(
+                    icon: Icon(Icons.logout),
+                    onPressed:(){
+                      print('click logout');
+                      FirestoreHelper().signOut();
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (context){
+                            return const MyHomePage(title: "MaanuEats" );
+                          }
+                      ));
+                    },
+                  ),
+                  title: Text('logout'),
+                ),
               ],
             )
         ),
