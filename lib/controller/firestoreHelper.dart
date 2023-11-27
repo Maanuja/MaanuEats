@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:maanueats/model/my_message.dart';
 import 'package:maanueats/model/my_user.dart';
 
 
@@ -53,5 +54,41 @@ class FirestoreHelper {
         .putData(bytesImage);
     String url = await snapshot.ref.getDownloadURL();
     return url;
+  }
+
+  // Récupère l'uid de l'utilisateur actuellement connecté
+  Future<String> getCurrentUid() async {
+    User? user = auth.currentUser;
+    return user!.uid;
+  }
+
+  // Récupère la liste des messages envoyés par l'utilisateur actuellement connecté à un utilisateur donné, et inversement
+  Future<List<MyMessage>> getMessages(String uid) async {
+    String currentUid = await getCurrentUid();
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('messages')
+        .where('senderId', isEqualTo: currentUid)
+        .where('receiverId', isEqualTo: uid)
+        .get();
+    QuerySnapshot snapshot2 = await FirebaseFirestore.instance.collection('messages')
+        .where('senderId', isEqualTo: uid)
+        .where('receiverId', isEqualTo: currentUid)
+        .get();
+    List<QueryDocumentSnapshot> list = snapshot.docs + snapshot2.docs;
+    list.sort((a, b) => a['dateTime'].compareTo(b['dateTime']));
+    List<MyMessage> messages = [];
+    for (QueryDocumentSnapshot doc in list) {
+      messages.add(MyMessage.database(doc));
+    }
+    return messages;
+  }
+
+  // Envoie un message
+  Future<void> sendMessage(MyMessage message) async {
+    await FirebaseFirestore.instance.collection('messages').add({
+      'content': message.content,
+      'receiverId': message.receiverId,
+      'senderId': message.senderId,
+      'dateTime': message.dateTime,
+    });
   }
 }
