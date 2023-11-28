@@ -47,15 +47,28 @@ class _MyChatState extends State<MyChat> {
             itemCount: messages.length,
             itemBuilder: (context, index) {
               MyMessage message = MyMessage.database(messages[index]);
-              return ListTile(
-                title: Text(message.content),
-                subtitle: Text(message.datetime.toString()),
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "https://picsum.photos/seed/${message.senderId}/200/300",
+              bool isCurrentUser = message.senderId == widget.userId1;
+              return Padding(
+                padding: EdgeInsets.all(4),
+                child: Align(
+                  alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            "https://picsum.photos/seed/${message.senderId}/200/300",
+                          ),
+                        ),
+                        title: Text(message.content),
+                        subtitle: Text(message.datetime.toString()),
+                      ),
+                    ),
                   ),
                 ),
               );
+
             },
           );
         },
