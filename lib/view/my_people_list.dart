@@ -37,6 +37,7 @@ class _MyPeopleListState extends State<MyPeopleList> {
                       return Container();
                     }
                     else {
+                      bool isFavorite = moi.isInFavorites(otherUser.uid);
                       return Card(
                         elevation: 5,
                         color: Colors.amber,
@@ -50,7 +51,6 @@ class _MyPeopleListState extends State<MyPeopleList> {
                           ),
                           title: Text(otherUser.fullName),
                           subtitle: Text(otherUser.email),
-                          // trailing: Icon(Icons.favorite_outline_outlined),
                           trailing: Wrap(
                             spacing: 12, // space between two icons
                             children: <Widget>[
