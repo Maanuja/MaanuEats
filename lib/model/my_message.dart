@@ -4,17 +4,22 @@ class MyMessage {
   late String content;
   late String receiverId;
   late String senderId;
-  late DateTime dateTime;
+  late DateTime datetime;
 
   MyMessage(){
-    dateTime = DateTime.now();
+    datetime = DateTime.now();
   }
 
   MyMessage.database(DocumentSnapshot snapshot) {
+    // content = snapshot.data().toString().contains('content') ? snapshot.get('content') : '';
+    // receiverId = snapshot.data().toString().contains('receiverId') ? snapshot.get('receiverId') : '';
+    // senderId = snapshot.data().toString().contains('senderId') ? snapshot.get('senderId') : '';
+    // dateTime = snapshot.data().toString().contains('datetime') ? snapshot.get('datetime').toDate() : DateTime.now();
+
     Map<String, dynamic> map = snapshot.data() as Map<String, dynamic>;
     content = map['content'];
     receiverId = map['receiverId'];
     senderId = map['senderId'];
-    dateTime = map['dateTime'].toDate();
+    datetime = map['datetime'] == null ? DateTime.now() : map['datetime'].toDate();
   }
 }

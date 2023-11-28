@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maanueats/constant.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
+import 'package:maanueats/model/my_message.dart';
 import 'package:maanueats/model/my_user.dart';
 import 'package:flutter/material.dart';
+import 'package:maanueats/service/messageService.dart';
 
 class MyChat extends StatefulWidget {
   String userId1;
@@ -15,53 +17,83 @@ class MyChat extends StatefulWidget {
 }
 
 class _MyChatState extends State<MyChat> {
+  final messageService = MessageService();
+  late Future<List<QueryDocumentSnapshot>> messagesFuture = messageService.getMessages(widget.userId2).catchError((error) {
+    print(error);
+    return [];
+  });
+  // Variable pour le formulaire, le champ de texte et le bouton d'envoi
+  final _formKey = GlobalKey<FormState>();
+  final _textController = TextEditingController();
+  late String _text;
+
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirestoreHelper().cloudUser.snapshots(),
-        builder: (context, snap){
-          if(ConnectionState.waiting == snap.connectionState){
-            return const CircularProgressIndicator.adaptive();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Chat"),
+        backgroundColor: Colors.redAccent,
+      ),
+      body: FutureBuilder<List<QueryDocumentSnapshot>>(
+        future: messagesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<QueryDocumentSnapshot> messages = snapshot.data!;
+            return ListView.builder(
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                MyMessage message = MyMessage.database(messages[index]);
+                return ListTile(
+                  title: Text(message.content),
+                  subtitle: Text(message.datetime.toString()),
+                );
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          else
-          {
-            if(snap.hasData == null){
-              return const Text("Aucune donnée");
-            }
-            else
-            {
-              List documents = snap.data!.docs;
-              return ListView.builder(
-                  itemCount: documents.length,
-                  itemBuilder: (context,index){
-                    MyUser otherUser = MyUser.database(documents[index]);
-                    if(moi.uid == otherUser.uid){
-                      return Container();
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Form(
+          key: _formKey,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    hintText: "Message",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Veuillez saisir un message";
                     }
-                    else {
-                      return Card(
-                        elevation: 5,
-                        color: Colors.amber,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 70,
-                            backgroundImage: NetworkImage(otherUser.avatar ??
-                                imageDefault),
-                          ),
-                          title: Text(otherUser.fullName),
-                          subtitle: Text(otherUser.email),
-                          trailing: Icon(Icons.favorite_outline_outlined),
-                        ),
-                      );
-                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _text = value;
+                    });
+                  },
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    messageService.sendMessage(_text, widget.userId2);
+                    _textController.clear();
                   }
-              );
-            }
-
-          }
-        }
+                },
+                icon: const Icon(Icons.send),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

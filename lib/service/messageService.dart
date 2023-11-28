@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../controller/firestoreHelper.dart';
 import '../model/my_message.dart';
 
@@ -6,9 +8,8 @@ class MessageService {
   final firestoreHelper = FirestoreHelper();
 
   // Récupère la liste des messages
-  Future<List<MyMessage>> getMessages(String currentUid, String contactedUid) async {
-    List<MyMessage> messages = await firestoreHelper.getMessages(contactedUid);
-    return messages;
+  Future<List<QueryDocumentSnapshot>> getMessages(String contactedUid) async {
+    return await firestoreHelper.getMessages(contactedUid);
   }
 
   // Envoie un message
@@ -17,7 +18,7 @@ class MessageService {
     message.content = content;
     message.receiverId = receiverId;
     message.senderId = await firestoreHelper.getCurrentUid();
-    message.dateTime = DateTime.now();
+    message.datetime = DateTime.now();
     await firestoreHelper.sendMessage(message);
   }
 }
