@@ -7,9 +7,9 @@ class MessageService {
   // Instanciation de la classe FirestoreHelper
   final firestoreHelper = FirestoreHelper();
 
-  // Récupère la liste des messages
-  Future<List<QueryDocumentSnapshot>> getMessages(String contactedUid) async {
-    return await firestoreHelper.getMessages(contactedUid);
+  // getMessages avec Stream
+  Stream<List<QueryDocumentSnapshot>> getMessagesStream(String contactedUid) async* {
+    yield* firestoreHelper.getMessagesStream(contactedUid);
   }
 
   // Envoie un message

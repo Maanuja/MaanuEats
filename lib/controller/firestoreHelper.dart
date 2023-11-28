@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:maanueats/model/my_message.dart';
 import 'package:maanueats/model/my_user.dart';
-import 'package:async/async.dart' show StreamGroup;
+import 'package:async/async.dart' show StreamZip;
 
 class FirestoreHelper {
   final auth = FirebaseAuth.instance;
@@ -62,22 +62,34 @@ class FirestoreHelper {
     return user!.uid;
   }
 
-  // Récupère la liste des messages envoyés par l'utilisateur actuellement connecté à un utilisateur donné, et inversement
-  Future<List<QueryDocumentSnapshot>> getMessages(String uid) async {
+  // getMessages avec un Stream
+  Stream<List<QueryDocumentSnapshot>> getMessagesStream(String uid) async* {
     String currentUid = await getCurrentUid();
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('messages')
+    Stream<QuerySnapshot> stream = FirebaseFirestore.instance.collection('messages')
         .where('senderId', isEqualTo: currentUid)
         .where('receiverId', isEqualTo: uid)
-        .get();
-    QuerySnapshot snapshot2 = await FirebaseFirestore.instance.collection('messages')
+        .snapshots();
+    Stream<QuerySnapshot> stream2 = FirebaseFirestore.instance.collection('messages')
         .where('senderId', isEqualTo: uid)
         .where('receiverId', isEqualTo: currentUid)
-        .get();
+        .snapshots();
 
-    List<QueryDocumentSnapshot> list = snapshot.docs + snapshot2.docs;
-    list.sort((a, b) => a.get('datetime').compareTo(b.get('datetime')));
+    // Merge streams with StreamZip
+    Stream<List<QuerySnapshot>> group = StreamZip([stream, stream2]);
 
-    return list;
+    yield* group.map((snapshots) {
+      List<QueryDocumentSnapshot> list = [];
+      for (QuerySnapshot snapshot in snapshots) {
+        list.addAll(snapshot.docs);
+      }
+      list.sort((a, b) => a.get('datetime').compareTo(b.get('datetime')));
+      return list;
+    });
+    // await for (QuerySnapshot snapshot in group.stream) {
+    //   List<QueryDocumentSnapshot> list = snapshot.docs;
+    //   list.sort((a, b) => a.get('datetime').compareTo(b.get('datetime')));
+    //   yield list;
+    // }
   }
 
   // Envoie un message

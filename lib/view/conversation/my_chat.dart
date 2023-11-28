@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:maanueats/constant.dart';
-import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/model/my_message.dart';
-import 'package:maanueats/model/my_user.dart';
 import 'package:flutter/material.dart';
 import 'package:maanueats/service/messageService.dart';
 
@@ -18,10 +15,7 @@ class MyChat extends StatefulWidget {
 
 class _MyChatState extends State<MyChat> {
   final messageService = MessageService();
-  late Future<List<QueryDocumentSnapshot>> messagesFuture = messageService.getMessages(widget.userId2).catchError((error) {
-    print(error);
-    return [];
-  });
+
   // Variable pour le formulaire, le champ de texte et le bouton d'envoi
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
@@ -35,26 +29,35 @@ class _MyChatState extends State<MyChat> {
         title: const Text("Chat"),
         backgroundColor: Colors.redAccent,
       ),
-      body: FutureBuilder<List<QueryDocumentSnapshot>>(
-        future: messagesFuture,
+      body: StreamBuilder<List<QueryDocumentSnapshot>>(
+        stream: messageService.getMessagesStream(widget.userId2),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<QueryDocumentSnapshot> messages = snapshot.data!;
-            return ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                MyMessage message = MyMessage.database(messages[index]);
-                return ListTile(
-                  title: Text(message.content),
-                  subtitle: Text(message.datetime.toString()),
-                );
-              },
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Une erreur est survenue"),
             );
-          } else {
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+          List<QueryDocumentSnapshot> messages = snapshot.data!;
+          return ListView.builder(
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              MyMessage message = MyMessage.database(messages[index]);
+              return ListTile(
+                title: Text(message.content),
+                subtitle: Text(message.datetime.toString()),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    "https://picsum.photos/seed/${message.senderId}/200/300",
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
       bottomNavigationBar: BottomAppBar(
