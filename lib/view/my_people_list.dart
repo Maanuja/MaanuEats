@@ -23,7 +23,7 @@ class _MyPeopleListState extends State<MyPeopleList> {
           height: 100,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 25.0, 8.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 2.0, 8.0, 8.0),
           child: TextField(
             controller: searchController,
             decoration: InputDecoration(
@@ -84,24 +84,39 @@ class _MyPeopleListState extends State<MyPeopleList> {
                             ),
                             title: Text(otherUser.fullName),
                             subtitle: Text(otherUser.email),
-                            trailing: IconButton(
-                              icon: isFavorite
+                            trailing: Wrap(
+                              spacing: 12, // space between two icons
+                              children: <Widget>[
+                                IconButton(
+                                  icon: isFavorite
                                   ? const Icon(Icons.favorite,
                                       color: Colors.red)
-                                  : const Icon(Icons.favorite_outline_outlined),
-                              onPressed: () {
-                                setState(() {
-                                  if (isFavorite) {
-                                    moi.removeFromFavorites(otherUser.uid);
-                                    FirestoreHelper().removeFromFavoritesList(
-                                        moi.uid, otherUser.uid);
-                                  } else {
-                                    moi.addToFavorites(otherUser.uid);
-                                    FirestoreHelper().addToFavoritesList(
-                                        moi.uid, otherUser.uid);
-                                  }
-                                });
-                              },
+                                        : const Icon(Icons.favorite_outline_outlined),
+                                  onPressed: () {
+                                    setState(() {
+                                      if (isFavorite) {
+                                        moi.removeFromFavorites(otherUser.uid);
+                                        FirestoreHelper().removeFromFavoritesList(
+                                            moi.uid, otherUser.uid);
+                                      } else {
+                                        moi.addToFavorites(otherUser.uid);
+                                        FirestoreHelper().addToFavoritesList(
+                                            moi.uid, otherUser.uid);
+                                      }
+                                    });
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.message),
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (context){
+                                          return MyChat(userId1: moi.uid, userId2 : otherUser);
+                                        }
+                                    ));
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         );
