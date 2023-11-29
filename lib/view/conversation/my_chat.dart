@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:maanueats/model/my_message.dart';
 import 'package:flutter/material.dart';
+import 'package:maanueats/model/my_user.dart';
 import 'package:maanueats/service/messageService.dart';
 
 class MyChat extends StatefulWidget {
   String userId1;
-  String userId2;
+  MyUser userId2;
 
   MyChat({super.key, required this.userId1, required this.userId2});
 
@@ -26,14 +27,23 @@ class _MyChatState extends State<MyChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chat"),
         backgroundColor: Colors.redAccent,
+        title : Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                  "https://picsum.photos/seed/${widget.userId2.uid}/200/300",
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(widget.userId2.fullName)
+            ]
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: messageService.getMessagesStream(widget.userId2),
+        stream: messageService.getMessagesStream(widget.userId2.uid),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print(snapshot.error);
             return const Center(
               child: Text("Une erreur est survenue"),
             );
@@ -56,6 +66,7 @@ class _MyChatState extends State<MyChat> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Card(
+                      color: isCurrentUser ? Colors.lime[50] : Colors.red[50],
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
@@ -101,7 +112,7 @@ class _MyChatState extends State<MyChat> {
               IconButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    messageService.sendMessage(_text, widget.userId2);
+                    messageService.sendMessage(_text, widget.userId2.uid);
                     _textController.clear();
                   }
                 },

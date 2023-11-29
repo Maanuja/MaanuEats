@@ -62,7 +62,7 @@ class _MyPeopleListState extends State<MyPeopleList> {
                                 onPressed: () {
                                   Navigator.push(context, MaterialPageRoute(
                                       builder: (context){
-                                        return MyChat(userId1: moi.uid, userId2 : otherUser.uid);
+                                        return MyChat(userId1: moi.uid, userId2 : otherUser);
                                       }
                                   ));
                                 },
