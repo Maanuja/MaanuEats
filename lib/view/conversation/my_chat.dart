@@ -94,7 +94,7 @@ class _MyChatState extends State<MyChat> {
                 child: TextFormField(
                   controller: _textController,
                   decoration: const InputDecoration(
-                    hintText: "Message",
+                    hintText: "Envoyer un message",
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
