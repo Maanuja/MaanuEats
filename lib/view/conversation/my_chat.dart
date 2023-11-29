@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:maanueats/model/my_user.dart';
 import 'package:maanueats/service/messageService.dart';
 
+import '../../constant.dart';
+import '../../controller/firestoreHelper.dart';
+
 class MyChat extends StatefulWidget {
   String userId1;
   MyUser userId2;
@@ -16,6 +19,8 @@ class MyChat extends StatefulWidget {
 
 class _MyChatState extends State<MyChat> {
   final messageService = MessageService();
+  final firestoreHelper = FirestoreHelper();
+  final _controllerScroll = ScrollController(initialScrollOffset: 100000);
 
   // Variable pour le formulaire, le champ de texte et le bouton d'envoi
   final _formKey = GlobalKey<FormState>();
@@ -32,7 +37,7 @@ class _MyChatState extends State<MyChat> {
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(
-                  "https://picsum.photos/seed/${widget.userId2.uid}/200/300",
+                  widget.userId2.avatar!,
                 ),
               ),
               const SizedBox(width: 16),
@@ -55,6 +60,8 @@ class _MyChatState extends State<MyChat> {
           }
           List<QueryDocumentSnapshot> messages = snapshot.data!.docs;
           return ListView.builder(
+            // Page need to be scrolled to the bottom when a new message is sent and received and when the page is loaded
+            controller: _controllerScroll,
             itemCount: messages.length,
             itemBuilder: (context, index) {
               MyMessage message = MyMessage.database(messages[index]);
@@ -69,12 +76,14 @@ class _MyChatState extends State<MyChat> {
                       color: isCurrentUser ? Colors.lime[50] : Colors.red[50],
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            "https://picsum.photos/seed/${message.senderId}/200/300",
-                          ),
+                          // image of the user with userId2.avatar
+                          backgroundImage: isCurrentUser ? NetworkImage(moi.avatar!) : NetworkImage(widget.userId2.avatar!),
                         ),
                         title: Text(message.content),
-                        subtitle: Text(message.datetime.toString()),
+                        // subtitle with the date in the format dd/MM/yyyy HH:mm. message.datetime is type DateTime
+                        subtitle: Text(
+                          "${message.datetime.day}/${message.datetime.month}/${message.datetime.year} ${message.datetime.hour}:${message.datetime.minute}",
+                        ),
                       ),
                     ),
                   ),
@@ -108,9 +117,16 @@ class _MyChatState extends State<MyChat> {
                 onPressed: () {
                   _text = _textController.text;
                   if (_formKey.currentState!.validate()) {
-                    messageService.sendMessage(_text, widget.userId2.uid);
-                    _textController.clear();
+                    messageService.sendMessage(_text, widget.userId2.uid).then((value) => {
+                      _textController.clear(),
+                      _controllerScroll.animateTo(
+                        _controllerScroll.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                      )
+                    });
                   }
+
                 },
                 icon: const Icon(Icons.send),
               ),
