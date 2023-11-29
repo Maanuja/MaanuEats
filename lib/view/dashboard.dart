@@ -9,6 +9,7 @@ import 'package:maanueats/constant.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/main.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:maanueats/view/profil/edit_profil.dart';
 
 import 'my_background.dart';
 import 'my_people_list.dart';
@@ -158,27 +159,61 @@ class _DashBoardState extends State<DashBoard> {
                     },
                   ),
                 ),
-                ElevatedButton.icon(
-                  onPressed:(){
-                    FirestoreHelper().signOut();
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context){
-                          return const MyHomePage(title: "MaanuEats" );
-                        }
-                    ));
-                  },
-                  icon: const Icon(
-                      Icons.logout,
-                      color: Colors.deepOrangeAccent
-                  ),
-                  label: const Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Roboto',
+                //un autre bouton pour editer les informations a gauche de logout
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return EditProfil(connectedUser : moi);
+                            },
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.edit,
                         color: Colors.deepOrangeAccent,
-                      )
-                  ),
+                      ),
+                      label: const Text(
+                        'Edit',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16), // Espacement entre les boutons
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        FirestoreHelper().signOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const MyHomePage(title: "MaanuEats");
+                            },
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.deepOrangeAccent,
+                      ),
+                      label: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Roboto',
+                          color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             )
