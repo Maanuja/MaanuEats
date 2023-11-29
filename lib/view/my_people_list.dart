@@ -3,6 +3,7 @@ import 'package:maanueats/constant.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/model/my_user.dart';
 import 'package:flutter/material.dart';
+import 'package:maanueats/view/conversation/my_chat.dart';
 
 class MyPeopleList extends StatefulWidget {
   const MyPeopleList({super.key});
@@ -50,25 +51,26 @@ class _MyPeopleListState extends State<MyPeopleList> {
                           ),
                           title: Text(otherUser.fullName),
                           subtitle: Text(otherUser.email),
-                          trailing: IconButton(
-                            icon: isFavorite
-                                ? Icon(Icons.favorite, color: Colors.red)
-                                : Icon(Icons.favorite_outline_outlined),
-                            onPressed: () {
-                              setState(() {
-                                if (isFavorite) {
-                                  moi.removeFromFavorites(otherUser.uid);
-                                  FirestoreHelper().removeFromFavoritesList(
-                                      moi.uid, otherUser.uid);
-                                } else {
-                                  moi.addToFavorites(otherUser.uid);
-                                  FirestoreHelper().addToFavoritesList(
-                                      moi.uid, otherUser.uid);
-                                }
-                              });
-                            },
+                          trailing: Wrap(
+                            spacing: 12, // space between two icons
+                            children: <Widget>[
+                              IconButton(
+                                icon: const Icon(Icons.favorite_outline_outlined), onPressed: () {  },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.message),
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (context){
+                                        return MyChat(userId1: moi.uid, userId2 : otherUser.uid);
+                                      }
+                                  ));
+                                },
+                              ),
+                            ],
                           ),
                         ),
+
                       );
                     }
                   }

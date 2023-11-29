@@ -2,8 +2,6 @@
 
 // Importation des packages
 import 'package:maanueats/controller/firestoreHelper.dart';
-import 'package:maanueats/model/my_message.dart';
-import 'package:maanueats/model/my_user.dart';
 import 'package:maanueats/service/messageService.dart';
 
 class MessageController {
@@ -15,12 +13,6 @@ class MessageController {
   Future<String> getCurrentUid() async {
     String uid = await firestoreHelper.getCurrentUid();
     return uid;
-  }
-
-  // Récupère la liste des messages
-  Future<List<MyMessage>> getMessages(MyUser contactedUserId) async {
-    String currentUid = await getCurrentUid();
-    return messageService.getMessages(currentUid, contactedUserId.uid);
   }
 
   // Envoie un message

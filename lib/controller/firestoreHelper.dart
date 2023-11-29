@@ -6,7 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:maanueats/model/my_message.dart';
 import 'package:maanueats/model/my_user.dart';
 
-
 class FirestoreHelper {
   final auth = FirebaseAuth.instance;
   final cloudUser = FirebaseFirestore.instance.collection('users');
@@ -79,25 +78,22 @@ class FirestoreHelper {
     return user!.uid;
   }
 
-  // Récupère la liste des messages envoyés par l'utilisateur actuellement connecté à un utilisateur donné, et inversement
-  Future<List<MyMessage>> getMessages(String uid) async {
-    String currentUid = await getCurrentUid();
-    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('messages')
-        .where('senderId', isEqualTo: currentUid)
-        .where('receiverId', isEqualTo: uid)
-        .get();
-    QuerySnapshot snapshot2 = await FirebaseFirestore.instance.collection('messages')
-        .where('senderId', isEqualTo: uid)
-        .where('receiverId', isEqualTo: currentUid)
-        .get();
-    List<QueryDocumentSnapshot> list = snapshot.docs + snapshot2.docs;
-    list.sort((a, b) => a['dateTime'].compareTo(b['dateTime']));
-    List<MyMessage> messages = [];
-    for (QueryDocumentSnapshot doc in list) {
-      messages.add(MyMessage.database(doc));
-    }
-    return messages;
+  // getMessages avec un Stream. Le retour doit être du type Stream<QuerySnapshot>
+  Stream<QuerySnapshot> getMessagesStream(String contactedUid) {
+    String currentUid = auth.currentUser!.uid;
+
+    Stream<QuerySnapshot> stream = FirebaseFirestore.instance.collection('messages')
+        .where(
+          Filter.or(
+            Filter.and(Filter("senderId", isEqualTo: currentUid), Filter("receiverId", isEqualTo: contactedUid)),
+            Filter.and(Filter("senderId", isEqualTo: contactedUid), Filter("receiverId", isEqualTo: currentUid)),
+          )
+        )
+        .snapshots();
+
+    return stream;
   }
+
 
   // Envoie un message
   Future<void> sendMessage(MyMessage message) async {
@@ -105,7 +101,7 @@ class FirestoreHelper {
       'content': message.content,
       'receiverId': message.receiverId,
       'senderId': message.senderId,
-      'dateTime': message.dateTime,
+      'datetime': message.datetime,
     });
   }
 
