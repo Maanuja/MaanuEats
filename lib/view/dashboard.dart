@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:maanueats/constant.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
@@ -116,7 +117,7 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
         drawer: Container(
             height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width * 0.66,
+            width: MediaQuery.of(context).size.width * 0.80,
             color: Colors.white,
             child: Column(
               children: [
@@ -141,16 +142,20 @@ class _DashBoardState extends State<DashBoard> {
                     )
                 ),
                 ListTile(
-                  leading: const Icon(
-                      Icons.mail,
-                      color: Colors.deepOrangeAccent
-                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  leading:  const Icon(Icons.mail),
                   title: Text(
                       moi.email,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         fontFamily: 'Roboto',
-                      )
+                      ),
+                  ),
+                  trailing:IconButton(
+                    icon: const Icon(Icons.copy),
+                    onPressed: (){
+                      Clipboard.setData(ClipboardData(text: moi.email));
+                    },
                   ),
                 ),
                 ElevatedButton.icon(
@@ -175,29 +180,6 @@ class _DashBoardState extends State<DashBoard> {
                       )
                   ),
                 ),
-                // ListTile(
-                  // leading: IconButton(
-                  //   icon: const Icon(
-                  //       Icons.logout,
-                  //       color: Colors.deepOrangeAccent
-                  //   ),
-                  //   onPressed:(){
-                  //     FirestoreHelper().signOut();
-                  //     Navigator.push(context, MaterialPageRoute(
-                  //         builder: (context){
-                  //           return const MyHomePage(title: "MaanuEats" );
-                  //         }
-                  //     ));
-                  //   },
-                  // ),
-                  // title: const Text(
-                  //     'logout',
-                  //     style: TextStyle(
-                  //       fontSize: 14,
-                  //       fontFamily: 'Roboto',
-                  //     )
-                  // ),
-                // ),
               ],
             )
         ),

@@ -41,12 +41,6 @@ class _MyConnectionState extends State<MyConnection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      extendBodyBehindAppBar: true,
-
       body: Stack(
         children: [
           const MyBackground(),

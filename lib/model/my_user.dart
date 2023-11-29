@@ -9,7 +9,6 @@ class MyUser {
   late String email;
   String ? avatar;
   List ? favoris;
-  //List<String>? favoris;
 
 
   String get fullName {
