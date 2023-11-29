@@ -102,15 +102,11 @@ class _MyChatState extends State<MyChat> {
                     }
                     return null;
                   },
-                  onChanged: (value) {
-                    setState(() {
-                      _text = value;
-                    });
-                  },
                 ),
               ),
               IconButton(
                 onPressed: () {
+                  _text = _textController.text;
                   if (_formKey.currentState!.validate()) {
                     messageService.sendMessage(_text, widget.userId2.uid);
                     _textController.clear();
