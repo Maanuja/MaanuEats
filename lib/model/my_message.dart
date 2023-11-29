@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyMessage {
+  late String uid;
   late String content;
   late String receiverId;
   late String senderId;
@@ -11,6 +12,7 @@ class MyMessage {
   }
 
   MyMessage.database(DocumentSnapshot snapshot) {
+    uid = snapshot.id;
     Map<String, dynamic> map = snapshot.data() as Map<String, dynamic>;
     content = map['content'];
     receiverId = map['receiverId'];

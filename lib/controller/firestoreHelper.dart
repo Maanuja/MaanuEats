@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:maanueats/model/my_message.dart';
 import 'package:maanueats/model/my_user.dart';
-import 'package:async/async.dart' show StreamZip;
 
 class FirestoreHelper {
   final auth = FirebaseAuth.instance;
@@ -79,35 +78,22 @@ class FirestoreHelper {
     return user!.uid;
   }
 
-  // getMessages avec un Stream
-  Stream<List<QueryDocumentSnapshot>> getMessagesStream(String uid) async* {
-    String currentUid = await getCurrentUid();
+  // getMessages avec un Stream. Le retour doit être du type Stream<QuerySnapshot>
+  Stream<QuerySnapshot> getMessagesStream(String contactedUid) {
+    String currentUid = auth.currentUser!.uid;
+
     Stream<QuerySnapshot> stream = FirebaseFirestore.instance.collection('messages')
-        .where('senderId', isEqualTo: currentUid)
-        .where('receiverId', isEqualTo: uid)
-        .snapshots();
-    Stream<QuerySnapshot> stream2 = FirebaseFirestore.instance.collection('messages')
-        .where('senderId', isEqualTo: uid)
-        .where('receiverId', isEqualTo: currentUid)
+        .where(
+          Filter.or(
+            Filter.and(Filter("senderId", isEqualTo: currentUid), Filter("receiverId", isEqualTo: contactedUid)),
+            Filter.and(Filter("senderId", isEqualTo: contactedUid), Filter("receiverId", isEqualTo: currentUid)),
+          )
+        )
         .snapshots();
 
-    // Merge streams with StreamZip
-    Stream<List<QuerySnapshot>> group = StreamZip([stream, stream2]);
-
-    yield* group.map((snapshots) {
-      List<QueryDocumentSnapshot> list = [];
-      for (QuerySnapshot snapshot in snapshots) {
-        list.addAll(snapshot.docs);
-      }
-      list.sort((a, b) => a.get('datetime').compareTo(b.get('datetime')));
-      return list;
-    });
-    // await for (QuerySnapshot snapshot in group.stream) {
-    //   List<QueryDocumentSnapshot> list = snapshot.docs;
-    //   list.sort((a, b) => a.get('datetime').compareTo(b.get('datetime')));
-    //   yield list;
-    // }
+    return stream;
   }
+
 
   // Envoie un message
   Future<void> sendMessage(MyMessage message) async {

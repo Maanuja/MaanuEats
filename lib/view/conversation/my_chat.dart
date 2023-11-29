@@ -29,10 +29,11 @@ class _MyChatState extends State<MyChat> {
         title: const Text("Chat"),
         backgroundColor: Colors.redAccent,
       ),
-      body: StreamBuilder<List<QueryDocumentSnapshot>>(
+      body: StreamBuilder<QuerySnapshot>(
         stream: messageService.getMessagesStream(widget.userId2),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            print(snapshot.error);
             return const Center(
               child: Text("Une erreur est survenue"),
             );
@@ -42,7 +43,7 @@ class _MyChatState extends State<MyChat> {
               child: CircularProgressIndicator(),
             );
           }
-          List<QueryDocumentSnapshot> messages = snapshot.data!;
+          List<QueryDocumentSnapshot> messages = snapshot.data!.docs;
           return ListView.builder(
             itemCount: messages.length,
             itemBuilder: (context, index) {

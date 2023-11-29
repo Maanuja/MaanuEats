@@ -8,7 +8,7 @@ class MessageService {
   final firestoreHelper = FirestoreHelper();
 
   // getMessages avec Stream
-  Stream<List<QueryDocumentSnapshot>> getMessagesStream(String contactedUid) async* {
+  Stream<QuerySnapshot> getMessagesStream(String contactedUid) async* {
     yield* firestoreHelper.getMessagesStream(contactedUid);
   }
 
