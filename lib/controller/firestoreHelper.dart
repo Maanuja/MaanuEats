@@ -42,6 +42,30 @@ class FirestoreHelper {
     return getUser(uid);
   }
 
+  static Future<bool> confirmPassword(String enteredPassword) async {
+    try {
+      // Get the current user
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser == null) {
+        throw Exception('No user signed in.');
+      }
+
+      // Create a credential using the entered password
+      AuthCredential credential = EmailAuthProvider.credential(email: currentUser.email!, password: enteredPassword);
+
+      // Re-authenticate the user with the credential
+      await currentUser.reauthenticateWithCredential(credential);
+
+      // Re-authentication successful
+      return true;
+    } catch (e) {
+      print('Error during password confirmation: $e');
+      // Handle the error, for example, show an error message
+      return false;
+    }
+  }
+
   //update user
   updateUser(String uid, Map<String,dynamic> data){
     cloudUser.doc(uid).update(data);
@@ -76,6 +100,12 @@ class FirestoreHelper {
   Future<String> getCurrentUid() async {
     User? user = auth.currentUser;
     return user!.uid;
+  }
+
+  // Récupère l'email de l'utilisateur actuellement connecté
+  Future<String?> getCurrentUserEmail() async {
+    User? user = auth.currentUser;
+    return user!.email;
   }
 
   // getMessages avec un Stream. Le retour doit être du type Stream<QuerySnapshot>

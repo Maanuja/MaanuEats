@@ -30,6 +30,15 @@ Une application Flutter avec authentification Firebase, mise en favoris des cont
 
 ## Captures d'écran
 
-Page de connexion | Page d'inscription
-
-Page de profil | Page de contacts | Page de discussion
+Page d'inscription
+![Simulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.02.38.png](lib%2Fassets%2Fimg%2FSimulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.02.38.png)
+Page de connexion 
+![Simulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.02.42.png](lib%2Fassets%2Fimg%2FSimulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.02.42.png)
+Page de profil 
+![Simulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.08.29.png](lib%2Fassets%2Fimg%2FSimulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.08.29.png)
+Edit profil avec demande de confirmation de mot de passe
+![img.png](lib%2Fassets%2Fimg%2Fimg.png)
+Page de contacts
+![contact.png](lib%2Fassets%2Fimg%2Fcontact.png)
+Page de discussion!
+![Simulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.01.53.png](lib%2Fassets%2Fimg%2FSimulator_Screenshot_-_iPhone_15_Pro_Max_-_2023-11-29_at_17.01.53.png)
