@@ -87,8 +87,10 @@ class FirestoreHelper {
           Filter.or(
             Filter.and(Filter("senderId", isEqualTo: currentUid), Filter("receiverId", isEqualTo: contactedUid)),
             Filter.and(Filter("senderId", isEqualTo: contactedUid), Filter("receiverId", isEqualTo: currentUid)),
+            Filter.and(Filter("name", isEqualTo: '$currentUid-$contactedUid'), Filter("name", isEqualTo: '$contactedUid-$currentUid')),
           )
         )
+        .orderBy('datetime', descending: false)
         .snapshots();
 
     return stream;
@@ -102,6 +104,7 @@ class FirestoreHelper {
       'receiverId': message.receiverId,
       'senderId': message.senderId,
       'datetime': message.datetime,
+      'name': '${message.senderId}-${message.receiverId}',
     });
   }
 
