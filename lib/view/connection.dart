@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
-import 'package:maanueats/restaurant.dart';
 import 'package:maanueats/view/dashboard.dart';
 import 'package:maanueats/view/my_background.dart';
 import '../constant.dart';
+import '../main.dart';
 
 
 class MyConnection extends StatefulWidget {
@@ -23,14 +23,14 @@ class _MyConnectionState extends State<MyConnection> {
         barrierDismissible: true,
         builder: (BuildContext context){
           return AlertDialog(
-            title: Text('Erreur'),
-            content: Text('Email ou mot de passe incorrect'),
+            title: const Text('Erreur'),
+            content: const Text('Email ou mot de passe incorrect'),
             actions: [
               TextButton(
                   onPressed: (){
                     Navigator.pop(context);
                   },
-                  child: Text('ok')
+                  child: const Text('ok')
               )
             ],
           );

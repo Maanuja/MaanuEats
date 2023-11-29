@@ -13,7 +13,9 @@ class MyUser {
 
 
   String get fullName {
-    return "$lastname $firstname";
+    String name = lastname.toUpperCase();
+    name += " ${firstname[0].toUpperCase()}${firstname.substring(1)}";
+    return name;
   }
 
   MyUser(){
@@ -35,9 +37,7 @@ class MyUser {
   }
 
   void addToFavorites(String userFavoriteUid) {
-    if (favoris == null) {
-      favoris = [];
-    }
+    favoris ??= [];
     if ( !favoris!.contains(userFavoriteUid)) {
       favoris!.add(userFavoriteUid);
     }

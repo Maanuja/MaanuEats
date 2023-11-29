@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:maanueats/constant.dart';
@@ -16,22 +15,6 @@ import 'my_people_list.dart';
 void main() {
   runApp(const MyApp());
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'DashBoard',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//         useMaterial3: true,
-//       ),
-//       home: const MyHomePage(title: 'DashBoard'),
-//     );
-//   }
-// }
 
 class DashBoard extends StatefulWidget {
   String firstName;
@@ -66,7 +49,7 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 TextButton(
                     onPressed: (){
-                      //notre entregsitrement dans la base de donnée
+                      //notre enregistrement dans la base de donnée
                       FirestoreHelper().stockageFiles(nameImage!, bytesImages!, "Images", moi.uid).then((value) {
                         setState(() {
                           moi.avatar = value;
@@ -85,7 +68,7 @@ class _DashBoardState extends State<DashBoard> {
           else
           {
             return AlertDialog(
-              title: const Text("Souhaitez vous enregistrer cette image"),
+              title: const Text("Souhaitez-vous enregistrer cette image ?"),
               content: Image.memory(bytesImages!),
               actions: [
                 TextButton(
@@ -95,7 +78,7 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 TextButton(
                     onPressed: (){
-                      //notre entregsitrement dans la base de donnée
+                      //notre enregistrement dans la base de donnée
                       FirestoreHelper().stockageFiles(nameImage!, bytesImages!, "Images", moi.uid).then((value) {
                         setState(() {
                           moi.avatar = value;
@@ -137,10 +120,10 @@ class _DashBoardState extends State<DashBoard> {
             color: Colors.white,
             child: Column(
               children: [
+                const SizedBox(height: 100),
                 InkWell(
                   onTap:(){
                     pickImage();
-                    print('appuyer');
                   },
                   child :CircleAvatar(
                     radius: 80,
@@ -148,26 +131,73 @@ class _DashBoardState extends State<DashBoard> {
 
                   ),
                 ),
-                Text(moi.fullName),
-                ListTile(
-                  leading: Icon(Icons.mail),
-                  title: Text(moi.email),
+                const SizedBox(height: 10),
+                Text(
+                    moi.fullName,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Roboto',
+                      color: Colors.deepOrangeAccent,
+                    )
                 ),
                 ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.logout),
-                    onPressed:(){
-                      print('click logout');
-                      FirestoreHelper().signOut();
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context){
-                            return const MyHomePage(title: "MaanuEats" );
-                          }
-                      ));
-                    },
+                  leading: const Icon(
+                      Icons.mail,
+                      color: Colors.deepOrangeAccent
                   ),
-                  title: Text('logout'),
+                  title: Text(
+                      moi.email,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Roboto',
+                      )
+                  ),
                 ),
+                ElevatedButton.icon(
+                  onPressed:(){
+                    FirestoreHelper().signOut();
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context){
+                          return const MyHomePage(title: "MaanuEats" );
+                        }
+                    ));
+                  },
+                  icon: const Icon(
+                      Icons.logout,
+                      color: Colors.deepOrangeAccent
+                  ),
+                  label: const Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Roboto',
+                        color: Colors.deepOrangeAccent,
+                      )
+                  ),
+                ),
+                // ListTile(
+                  // leading: IconButton(
+                  //   icon: const Icon(
+                  //       Icons.logout,
+                  //       color: Colors.deepOrangeAccent
+                  //   ),
+                  //   onPressed:(){
+                  //     FirestoreHelper().signOut();
+                  //     Navigator.push(context, MaterialPageRoute(
+                  //         builder: (context){
+                  //           return const MyHomePage(title: "MaanuEats" );
+                  //         }
+                  //     ));
+                  //   },
+                  // ),
+                  // title: const Text(
+                  //     'logout',
+                  //     style: TextStyle(
+                  //       fontSize: 14,
+                  //       fontFamily: 'Roboto',
+                  //     )
+                  // ),
+                // ),
               ],
             )
         ),
@@ -189,10 +219,11 @@ class _DashBoardState extends State<DashBoard> {
           });
         },
         currentIndex: selectedIndex,
+        selectedItemColor: Colors.deepOrangeAccent,
         items: const [
           BottomNavigationBarItem(
               label: "Personnes",
-              icon: Icon(Icons.person)
+              icon: Icon(Icons.person),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),

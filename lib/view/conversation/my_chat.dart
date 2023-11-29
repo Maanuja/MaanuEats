@@ -27,7 +27,7 @@ class _MyChatState extends State<MyChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.orangeAccent,
         title : Row(
             children: [
               CircleAvatar(
