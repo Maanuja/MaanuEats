@@ -6,6 +6,7 @@ class MyMessage {
   late String receiverId;
   late String senderId;
   late DateTime datetime;
+  late String name;
 
   MyMessage(){
     datetime = DateTime.now();
@@ -18,5 +19,6 @@ class MyMessage {
     receiverId = map['receiverId'];
     senderId = map['senderId'];
     datetime = map['datetime'] == null ? DateTime.now() : map['datetime'].toDate();
+    name = map['__name__'] ?? '';
   }
 }
