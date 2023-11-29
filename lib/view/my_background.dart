@@ -12,12 +12,10 @@ class MyBackground extends StatefulWidget {
 class _MyBackgroundState extends State<MyBackground> {
   @override
   Widget build(BuildContext context) {
-    return ClipPath(
-      clipper: MyCustomPath(),
+    return CustomPaint(
+      painter: MyCustomPath(),
       child: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.purple,
+        color: Colors.transparent,
       ),
     );
   }

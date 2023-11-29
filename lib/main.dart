@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
-import 'package:maanueats/restaurant.dart';
 import 'package:maanueats/view/connection.dart';
 import 'package:maanueats/view/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:maanueats/view/my_animation.dart';
 import 'package:maanueats/view/my_background.dart';
 import 'controller/permissionPhoto.dart';
 import 'firebase_options.dart';
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -66,85 +64,90 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(10),
               child: Column(
                   children : [
-                    const Text ('Register your account',
-                        style:TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27,
-                            color: Colors.grey
-                        )
+                    const SizedBox(height: 100),
+                    // Image network
+                    const Image(
+                      image: NetworkImage(
+                          'https://www.creativefabrica.com/wp-content/uploads/2022/03/07/Restaurant-yummy-food-logo-design-Graphics-26620420-2-580x387.png'),
+                      height: 200,
                     ),
-                    MyAnimation(
-                      duration: 1,
-                      child: Image.network('https://images.unsplash.com/photo-1682685797406-97f364419b4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80',
-                          height: 200
+                    // Text "Register your account" en orange à gauche de l'écran
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Register your account',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'Roboto',
+                          color: Colors.deepOrangeAccent,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    MyAnimation(
-                      duration: 2,
-                      child: TextField(
-                        onChanged: (text){
-                          setState(() {
-                            firstName = text;
-                          });
-                        },
-                        decoration:  InputDecoration(
+                    TextField(
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      onChanged: (text){
+                        setState(() {
+                          firstName = text;
+                        });
+                      },
+                      decoration:  InputDecoration(
                           prefixIcon: const Icon(Icons.person),
-                          hintText: "enter your fistname",
+                          hintText: "Firstname",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)
+                              borderRadius: BorderRadius.circular(20)
                           )
-                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    MyAnimation(
-                      duration: 3,
-                      child: TextField(
-                        controller : lastName,
-                        decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.person),
-                            hintText: "enter your lastname",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            )
-                        ),
+                    TextField(
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      controller : lastName,
+                      decoration:  InputDecoration(
+                          prefixIcon: const Icon(Icons.person),
+                          hintText: "Lastname",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)
+                          )
                       ),
                     ),
                     const SizedBox(height: 10),
-                    MyAnimation(
-                      duration: 4,
-                      child: TextField(
-                        controller: email,
-                        decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.email),
-                            hintText: "enter your email",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            )
-                        ),
+                    TextField(
+                      controller: email,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      decoration:  InputDecoration(
+                          prefixIcon: const Icon(Icons.email),
+                          hintText: "Email",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)
+                          )
                       ),
                     ),
                     const SizedBox(height: 10),
-                    MyAnimation(
-                      duration: 5,
-                      child: TextField(
-                        obscureText: true,
-                        controller: password,
-                        decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.lock),
-                            hintText: "enter your password",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            )
-                        ),
+                    TextField(
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      obscureText: true,
+                      controller: password,
+                      decoration:  InputDecoration(
+                          prefixIcon: const Icon(Icons.lock),
+                          hintText: "Password",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)
+                          )
                       ),
                     ),
                     const SizedBox(height: 10),
 
                     ElevatedButton(
                         onPressed:(){
-                          print('click register');
                           FirestoreHelper().RegisterMyUser(lastName.text, firstName, email.text, password.text)
                               .then((value){
                             setState(() {
@@ -160,7 +163,21 @@ class _MyHomePageState extends State<MyHomePage> {
                             //afficher un pop
                           });
                         },
-                        child: Text('register')
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(200, 50),
+                          backgroundColor: Colors.deepOrangeAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
+                          'Yummy !',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18
+                          ),
+                        )
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(

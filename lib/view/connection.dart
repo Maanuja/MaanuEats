@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maanueats/controller/firestoreHelper.dart';
 import 'package:maanueats/restaurant.dart';
 import 'package:maanueats/view/dashboard.dart';
-import 'package:maanueats/view/my_animation.dart';
 import 'package:maanueats/view/my_background.dart';
 import '../constant.dart';
 
@@ -55,71 +54,106 @@ class _MyConnectionState extends State<MyConnection> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children : [
-                  const Text ('Log In your account',
-                      style:TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 27,
-                          color: Colors.grey
-                      )
+                  const SizedBox(height: 100),
+                  // Image network
+                  const Image(
+                    image: NetworkImage(
+                        'https://www.creativefabrica.com/wp-content/uploads/2022/03/07/Restaurant-yummy-food-logo-design-Graphics-26620420-2-580x387.png'),
+                    height: 200,
                   ),
-                  const SizedBox(height: 10),
-                  MyAnimation(
-                    duration: 0,
-                    child: Image.network('https://media.tenor.com/arL-Och6Y7sAAAAC/connecting-loading.gif',
-                        height: 200
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  MyAnimation(
-                    duration: 0,
-                    child: TextField(
-                      controller: email,
-                      decoration:  InputDecoration(
-                          prefixIcon: const Icon(Icons.email),
-                          hintText: "enter your email",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)
-                          )
+                  // Text "Register your account" en orange à gauche de l'écran
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Log in to your account',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: 'Roboto',
+                        color: Colors.deepOrangeAccent,
                       ),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  MyAnimation(
-                    duration: 0,
-                    child: TextField(
-                      obscureText: true,
-                      controller: password,
-                      decoration:  InputDecoration(
-                          prefixIcon: const Icon(Icons.lock),
-                          hintText: "enter your password",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)
-                          )
-                      ),
+                  TextField(
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                    controller: email,
+                    decoration:  InputDecoration(
+                        prefixIcon: const Icon(Icons.email),
+                        hintText: "Email",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)
+                        )
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                    obscureText: true,
+                    controller: password,
+                    decoration:  InputDecoration(
+                        prefixIcon: const Icon(Icons.lock),
+                        hintText: "Password",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)
+                        )
                     ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(200, 50),
+                        backgroundColor: Colors.deepOrangeAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
                       onPressed:(){
-                        print('click connect');
                         FirestoreHelper().ConnectMyUser(email.text, password.text)
-                            .then((value) => {
-                          setState(() {
-                            moi = value;
-                          }),
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context){
-                                return DashBoard(firstName: moi.firstname, lastName : moi.lastname );
-                              }
-                          ))
-                        })
-                            .catchError((error) {
-                          popErreur();
-                        });
-
+                          .then((value) => {
+                            setState(() {
+                              moi = value;
+                            }),
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context){
+                                  return DashBoard(firstName: moi.firstname, lastName : moi.lastname );
+                                }
+                            ))
+                          })
+                          .catchError((error) {
+                            popErreur();
+                          });
                       },
-                      child: Text('connect')
-                  )
+                      child: const Text(
+                          'Yummy !',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18
+                          ),
+                      )
+                  ),
+                  const SizedBox(height: 30),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) {
+                          return const MyApp();
+                        },
+                      ),
+                      );
+                    },
+                    child: const Text(
+                      'Don\'t have an account ? Register here',
+                      style: TextStyle(
+                        color: Colors.blue, // Customize the color as needed
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ],
               )
           ),
